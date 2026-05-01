@@ -36,5 +36,4 @@ hvg_labelled <- LabelPoints(
 hvg / hvg_labelled
 
 # ---- Scale data ----
-all.genes <- rownames(seurat)
-seurat <- ScaleData(seurat, features = all.genes)
+seurat <- ScaleData(seurat, vars.to.regress = c("nFeature_RNA", "percent.mt"))
