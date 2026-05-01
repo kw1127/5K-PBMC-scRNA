@@ -1,4 +1,4 @@
-# ----02. Quality Control (QC) ---------------------------------------------
+# ---- 02. Quality Control (QC) -------------------------------------------------
 # 
 # Aim:
 #   - Compute QC metrics (percent.mt, percent.ribo, percent.hb)
@@ -6,7 +6,7 @@
 #   - Study the relationship between QC metrics
 #   - Subset the data for downstream analysis.
 # 
-# =============================================================================
+# ------------------------------------------------------------------------------
 
 # ---- QC ----
 seurat[["percent.mt"]] <- PercentageFeatureSet(seurat, pattern = "^MT-")
