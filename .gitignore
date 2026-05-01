@@ -1,0 +1,16 @@
+# R / RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# macOS
+.DS_Store
+
+# Data — too big for git
+Counts_matrix_PBMC/
+*.rds
+*.h5
+*.tar.gz
+*.mtx
+*.mtx.gz
