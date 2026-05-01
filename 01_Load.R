@@ -1,4 +1,4 @@
-# ----01. load_data_create_seurat ---------------------------------------------
+# ----01. Loading the data and creating the Seurat object ---------------------------------------------
 # 
 # Aim:
 #   - Load packages for scRNA-seq analysis
@@ -14,6 +14,7 @@
 library(Seurat)
 library(dplyr)
 library(patchwork)
+library(ggplot2)
 
 # ---- Read the counts matrix ----
 counts <- Read10X(data.dir = "Counts_matrix_PBMC")
