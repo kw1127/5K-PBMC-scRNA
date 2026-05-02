@@ -1,4 +1,4 @@
-# ---- 03. Normalisation -------------------------------------------------
+# ---- 03. Normalisation -------------------------------------------------------
 # 
 # Aim:
 #   - Log-transform raw counts using NormalizeData (scale.factor = 10,000)
