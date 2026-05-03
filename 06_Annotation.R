@@ -18,7 +18,7 @@ positive.markers <- FindAllMarkers(
   logfc.threshold = 0.25
 )
 
-# ---- Filter and sort DEGs by cluster association ----
+# ---- Find top DEGs by cluster ----
 top6 <- positive.markers %>%
   group_by(cluster) %>%
   filter(avg_log2FC > 1) %>%
@@ -47,3 +47,70 @@ FeaturePlot(seurat,
             min.cutoff = "q10",
             max.cutoff = "q90"
 )
+
+# ---- List canonical PBMC markers ----
+markers <- list(
+  "CD4 T" = c("CD3D", "CD4", "IL7R", "CCR7"),
+  "CD8 T" = c("CD8A", "CD8B"),
+  "NK" = c("GNLY", "NKG7", "KLRD1"),
+  "B" = c("MS4A1", "CD79A", "CD19"),
+  "CD14 Monocyte" = c("CD14", "LYZ", "S100A8"),
+  "CD16 Monocyte" = c("FCGR3A", "MS4A7"),
+  "DC" = c("FCER1A", "CST3"),
+  "Platelet" = c("PPBP", "PF4")
+)
+
+DotPlot(
+  seurat, 
+  features = markers) + 
+  RotatedAxis()
+
+# ---- T-cell subtyping ----
+t_markers <- c(
+  # Pan-T
+  "CD3D", "CD3E",
+  # CD4
+  "CD4", "IL7R", "CCR7", "LEF1",
+  # CD8
+  "CD8A", "CD8B", "CD8B2",
+  # Cytotoxic / effector
+  "GZMK", "GZMB", "GZMA", "PRF1", "NKG7", "GNLY",
+  # Memory/naive
+  "SELL", "TCF7", "S100A4",
+  # Treg
+  "FOXP3", "IL2RA",
+  # MAIT
+  "KLRB1", "SLC4A10"
+)
+
+DotPlot(seurat, features = t_markers,
+        idents = c("0", "1", "2", "5", "8")) + RotatedAxis()
+
+# ---- Final cluster annotation ----
+cluster.ids <- c(
+  "0"  = "CD4 T naive",
+  "1"  = "CD4 T memory",
+  "2"  = "CD4 T",
+  "3"  = "CD14 Monocyte",
+  "4"  = "CD14 Monocyte",
+  "5"  = "NK",
+  "6"  = "B",
+  "7"  = "B",
+  "8"  = "CD4 T naive",
+  "9"  = "CD16 Monocyte",
+  "10" = "DC",
+  "11" = "Platelet"
+)
+
+seurat <- RenameIdents(seurat, cluster.ids)
+seurat$cluster_celltype <- Idents(seurat)
+
+# ---- Final UMAP ----
+DimPlot(
+  seurat,
+  reduction = "umap",
+  label     = TRUE,
+  repel     = TRUE,
+  pt.size   = 0.5
+) + 
+  NoLegend()
