@@ -41,4 +41,3 @@ VizDimLoadings(seurat, dims = 1:2, reduction = "pca")
 
 # ---- Visualise the PCA output on a 2D scatter plot ----
 DimPlot(seurat, reduction = "pca") + NoLegend()
-

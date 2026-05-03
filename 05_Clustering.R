@@ -22,3 +22,13 @@ seurat <- RunUMAP(seurat, dims = 1:optimal_pc)
 # ---- Visualise ----
 DimPlot(seurat, reduction = "umap", label = TRUE)
 
+# ---- Visualise resolution difference ----
+res <- grep("_snn_res\\.", colnames(seurat@meta.data), value = TRUE)
+
+res_plots <- lapply(res, function(r) {
+  DimPlot(seurat, reduction = "umap", group.by = r, label = TRUE) +
+    ggtitle(r) +
+    NoLegend()
+})
+
+wrap_plots(res_plots, ncol = 4)

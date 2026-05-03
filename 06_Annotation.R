@@ -7,18 +7,10 @@
 #
 # ------------------------------------------------------------------------------
 
-# ---- Plot 6 top HVGs ----
-top10features <- FeaturePlot(
-  seurat,
-  features = top10[1:6],
-  reduction = "umap",
-  order = TRUE,
-  min.cutoff = "q10",
-  max.cutoff = "q90",
-)
-top10features
+# ---- Set optimal resolution ----
+Idents(seurat) <- "RNA_snn_res.0.5"
 
-# ---- Find DEGs defining cell types ----
+# ---- Identify DEGs ----
 positive.markers <- FindAllMarkers(
   seurat,
   only.pos = TRUE,
@@ -27,10 +19,31 @@ positive.markers <- FindAllMarkers(
 )
 
 # ---- Filter and sort DEGs by cluster association ----
-positive.markers <- positive.markers %>%
+top6 <- positive.markers %>%
   group_by(cluster) %>%
-  filter(avg_log2FC > 1)
+  filter(avg_log2FC > 1) %>%
+  slice_max(avg_log2FC, n = 6) %>%   # best marker per cluster
+  ungroup()
+  
+# ---- Visualise top 6 markers ----
+DotPlot(seurat, features = unique(top6$gene)) +
+  RotatedAxis()
 
+DoHeatmap(seurat, features = top6$gene) + 
+  NoLegend()
 
-# ---- Visualise distribution of some genes ----
-VlnPlot(seurat, features = c("IL32", "IL7R", "GLA"))
+# ---- Identify top DEGs in each cluster ----
+top_per_cluster <- positive.markers %>%
+  group_by(cluster) %>%
+  filter(avg_log2FC > 1) %>%
+  slice_max(avg_log2FC, n = 1) %>%   # best marker per cluster
+  ungroup() %>%
+  pull(gene)
+
+# ---- Visualise top DEGs ----
+FeaturePlot(seurat, 
+            features = top_per_cluster, 
+            order = TRUE,
+            min.cutoff = "q10",
+            max.cutoff = "q90"
+)
