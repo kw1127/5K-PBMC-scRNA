@@ -1,4 +1,4 @@
-# ---- 06. Cell annotation ----------------------------------------------------------
+# ---- 06. Cell annotation -----------------------------------------------------
 # 
 # Aim:
 #   - Visualise expression of HVGs on the UMAP plot
